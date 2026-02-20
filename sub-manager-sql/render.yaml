@@ -3,6 +3,7 @@ services:
     name: sub-manager-api
     env: node
     plan: free
+    rootDir: sub-manager-sql
     buildCommand: npm install
     startCommand: npm start
     envVars:
