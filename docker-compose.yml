@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # 1. The Database
+  mysql:
+    image: mysql:8.0
+    container_name: sub_manager_db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Gsaisagar@1909
+      MYSQL_DATABASE: submanager_db
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # 2. The Backend API
+  backend:
+    build: ./sub-manager-sql
+    container_name: sub_manager_api
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=mysql
+      - CLIENT_URL=http://localhost:5173
+      - GOOGLE_CLIENT_ID=placeholder_client_id
+      - GOOGLE_CLIENT_SECRET=placeholder_client_secret
+      - SESSION_SECRET=dev_secret_key
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  # 3. The Frontend UI
+  frontend:
+    build: ./sub-manager-ui
+    container_name: sub_manager_ui
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql-data:
