@@ -10,11 +10,17 @@ git commit -m "chore: add deployment configurations"
 git push origin main
 ```
 
-## 2. Setup Aiven (MySQL Database)
-1. Go to [Aiven](https://aiven.io/) and create a free account.
-2. Click **Create Service** and choose **MySQL** (select the Free Plan/Hobbyist tier).
-3. Once provisioned, locate your **Service URI** or connection details (Host, Port, User, Password, Database Name).
-4. Connect to this remote database using your favorite SQL client (like DBeaver or MySQL Workbench) and run the initialization script:
+## 2. Setup MySQL Database (TiDB Serverless)
+Aiven has recently restricted their free tier in many regions. We will use **TiDB Serverless** instead, which provides a highly-available, free MySQL-compatible database.
+
+1. Go to [TiDB Cloud](https://tidbcloud.com/) and create a free account (you can sign up with Google or GitHub).
+2. Click **Create Cluster**.
+3. Select the **Serverless** tier (which is free forever for up to 5GB).
+4. Choose a region close to you (e.g., AWS Mumbai) and click **Create**.
+5. Once your cluster is created, you will be prompted to generate a password. **Save this password!**
+6. Click on **Connect** in the top right corner.
+7. Select **Node.js** as your environment, and you will see your connection details. Note down the **Host**, **Port** (usually 4000), **User**, **Password**, and **Database** (usually `test`).
+8. Connect to this remote database using your favorite SQL client (like DBeaver or MySQL Workbench) and run the initialization script:
    ```sql
    CREATE DATABASE IF NOT EXISTS submanager_db;
    ```
