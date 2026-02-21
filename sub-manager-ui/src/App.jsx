@@ -17,17 +17,27 @@ function App() {
     startDate: ''
   });
 
-  // 1. Check Login Status on Load
+  // 1. Check Login Status on Load and Start Polling
   useEffect(() => {
+    let intervalId;
+
     axios.get('/api/user')
       .then(res => {
         // Safety Check: Ensure we actually have user data
         if (res.data && (res.data.id || res.data.emails)) {
             setUser(res.data);
             fetchSubs();
+
+            // Start polling every 5 seconds for live updates
+            intervalId = setInterval(fetchSubs, 5000);
         }
       })
       .catch(() => console.log("Not logged in"));
+
+    // Cleanup interval on unmount
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
   }, []);
 
   const fetchSubs = () => {
