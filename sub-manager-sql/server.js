@@ -9,6 +9,8 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 require('dotenv').config();
 
 const app = express();
+app.set('trust proxy', 1); // Essential for Render/reverse proxies
+
 const PORT = process.env.PORT || 3000;
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 
@@ -24,7 +26,8 @@ app.use(passport.session());
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: "/auth/google/callback"
+  callbackURL: "/auth/google/callback",
+  proxy: true
 },
   (accessToken, refreshToken, profile, done) => {
     return done(null, profile);
