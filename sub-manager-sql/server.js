@@ -17,7 +17,11 @@ const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 app.use(session({
   secret: process.env.SESSION_SECRET || 'dev_secret_key',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', // true on render
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+  }
 }));
 
 app.use(passport.initialize());
